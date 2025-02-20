@@ -16,17 +16,48 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @if (Model.Any())
             {
-                <tr>
-                    <td>@item.Description</td>
-                    <td>@item.Amount</td>
-                    <td>@item.Category</td>
-                    <td>@item.Date.ToString("yyyy-MM-dd")</td>
-                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Description</td>
+                        <td>@item.Amount</td>
+                        <td>@item.Category</td>
+                        <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="4">No data found!</td></tr>    
             }
         </tbody>
     </table>
 </div>
 
+<h2>Expenses Overview</h2>
+<div>
+    <canvas id="myChart"></canvas>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    fetch("/Expenses/GetChartData")
+        .then(response => response.json())
+        .then(data =>{
+            new Chart(ctx, {
+                              type: 'pie',
+                              data: {
+                                labels: data.map(data => data.category),
+                                datasets: [{
+                                  data: data.map(data => data.total),
+                                  borderWidth: 1
+                                }]
+                              }
+                            })
+        });
+</script>

@@ -43,5 +43,10 @@ namespace FinanceApp.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+        public IActionResult GetChartData()
+        {
+            return Json(_service.GetChartData());
+        }
     }
 }
